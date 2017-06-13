@@ -42,16 +42,27 @@ const runApplication = print => userData =>
     .forEach(printAsJson(print));
 // END: Business logic
 
-test("summary", () => {
+test.skip("summary replaceByKeyReducer unit test", () => {
   expect(replaceByKeyReducer("replacement")({}, "someKey")).toEqual({
     someKey: "replacement"
   });
+});
 
+test.skip("summary replacedKeys unit test", () => {
   expect(replacedKeys("replacement", ["someKey", "anotherKey"])).toEqual({
     someKey: "replacement",
     anotherKey: "replacement"
   });
+});
 
+test.skip("summary functional test", () =>
+  apiData.then(runApplication(consoleLog)).then(result => {
+    expect(typeof result).toEqual("undefined");
+  })
+);
+
+// Example of mock testing the printing part of the application
+test.skip("summary mocked test", () => {
   const mockPrint = jest.fn();
   const mockData = [
     { id: "secret id 1", name: "name 1", publicKey: "public value" },
@@ -64,7 +75,9 @@ test("summary", () => {
 
   runApplication(mockPrint)(mockData);
 
-  // two calls (outer array), one argument each (inner array), and content gets stringified
+  // two mock function calls (outer array),
+  // one argument each (inner array),
+  // and content gets JSON stringified in the printAsJson function.
   const expectedData = [
     [
       JSON.stringify(
@@ -87,8 +100,4 @@ test("summary", () => {
   ];
 
   expect(mockPrint.mock.calls).toEqual(expectedData);
-
-  return apiData.then(runApplication(consoleLog)).then(result => {
-    expect(typeof result).toEqual("undefined");
-  });
 });

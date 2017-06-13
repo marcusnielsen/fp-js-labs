@@ -1,4 +1,4 @@
-test("reduce", () => {
+test.skip("reduce", () => {
   const data = [
     { id: 1, name: "Marcus", age: 101 },
     { id: 2, name: "Moa", age: 32 },
