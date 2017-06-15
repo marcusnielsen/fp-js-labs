@@ -43,16 +43,30 @@ const runApplication = print => userData =>
 // END: Business logic
 
 test.skip("summary replaceByKeyReducer unit test", () => {
-  expect(replaceByKeyReducer("replacement")({}, "someKey")).toEqual({
+  const replacement = "replacement";
+  const accumulator = {};
+  const replacementKey = "someKey";
+  const replacementReducer = replaceByKeyReducer(replacement);
+
+  const result = replacementReducer(accumulator, replacementKey);
+  const expected = {
     someKey: "replacement"
-  });
+  };
+
+  expect(result).toEqual(expected);
 });
 
 test.skip("summary replacedKeys unit test", () => {
-  expect(replacedKeys("replacement", ["someKey", "anotherKey"])).toEqual({
+  const replacement = "replacement";
+  const replacementKeys = ["someKey", "anotherKey"];
+
+  const result = replacedKeys(replacement, replacementKeys);
+  const expected = {
     someKey: "replacement",
     anotherKey: "replacement"
-  });
+  };
+
+  expect(result).toEqual(expected);
 });
 
 test.skip("summary functional test", () =>
@@ -64,39 +78,41 @@ test.skip("summary functional test", () =>
 // Example of mock testing the printing part of the application
 test.skip("summary mocked test", () => {
   const mockPrint = jest.fn();
-  const mockData = [
-    { id: "secret id 1", name: "name 1", publicKey: "public value" },
-    {
-      id: "secret id 2",
-      name: "name 2",
-      publicKey: "public value 2"
-    }
-  ];
+
+  const mockData0 = {
+    id: "secret id 1",
+    name: "name 1",
+    publicKey: "public value"
+  };
+
+  const mockData1 = {
+    id: "secret id 2",
+    name: "name 2",
+    publicKey: "public value 2"
+  };
+
+  const mockData = [mockData0, mockData1];
 
   runApplication(mockPrint)(mockData);
+
+  const anonymizedData0 = {
+    id: "anonymous",
+    name: "anonymous",
+    publicKey: "public value"
+  };
+
+  const anonymizedData1 = {
+    id: "anonymous",
+    name: "anonymous",
+    publicKey: "public value 2"
+  };
 
   // two mock function calls (outer array),
   // one argument each (inner array),
   // and content gets JSON stringified in the printAsJson function.
   const expectedData = [
-    [
-      JSON.stringify(
-        { id: "anonymous", name: "anonymous", publicKey: "public value" },
-        null,
-        2
-      )
-    ],
-    [
-      JSON.stringify(
-        {
-          id: "anonymous",
-          name: "anonymous",
-          publicKey: "public value 2"
-        },
-        null,
-        2
-      )
-    ]
+    [JSON.stringify(anonymizedData0, null, 2)],
+    [JSON.stringify(anonymizedData1, null, 2)]
   ];
 
   expect(mockPrint.mock.calls).toEqual(expectedData);
